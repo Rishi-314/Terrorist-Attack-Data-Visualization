@@ -1,9 +1,3 @@
-from pathlib import Path
-
-root = Path(r"c:\Users\RISHIKESH\OneDrive\Desktop\VGPay-SoundBox\Terrorist-Attack-Data-Visualization")
-images_dir = root / "images"
-images_dir.mkdir(exist_ok=True)
-
 # Write the SVG overview (this part remains unchanged)
 svg_path = images_dir / "terrorism_overview.svg"
 svg_path.write_text(
