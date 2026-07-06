@@ -1,11 +1,10 @@
-# Terrorist-Attack-Data-Visualization
-
 from pathlib import Path
 
 root = Path(r"c:\Users\RISHIKESH\OneDrive\Desktop\VGPay-SoundBox\Terrorist-Attack-Data-Visualization")
 images_dir = root / "images"
 images_dir.mkdir(exist_ok=True)
 
+# Write the SVG overview (this part remains unchanged)
 svg_path = images_dir / "terrorism_overview.svg"
 svg_path.write_text(
     """<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
@@ -49,11 +48,36 @@ svg_path.write_text(
     encoding="utf-8"
 )
 
-readme_path = root / "README.md"
-readme_path.write_text(
-    """# Terrorist-Attack-Data-Visualization
+# ------------------------------
+# Build the README content ONCE
+# ------------------------------
 
-![Terrorist Attack Data Visualization](images/terrorism_overview.svg)
+# Relative path to the SVG (it always exists after creation)
+svg_rel = svg_path.relative_to(root).as_posix()
+
+# Check for a dataset cover image (optional)
+dataset_cover_candidates = [
+    root / "dataset-cover.png",
+    root / "images" / "dataset-cover.png"
+]
+dataset_cover_path = next((p for p in dataset_cover_candidates if p.exists()), None)
+
+# Build image lines for the README
+image_lines = [
+    f"![Terrorist Attack Data Visualization]({svg_rel})"
+]
+if dataset_cover_path:
+    image_lines.append(f"![Dataset Cover]({dataset_cover_path.relative_to(root).as_posix()})")
+else:
+    # fallback – the image is not present, but we keep a placeholder
+    image_lines.append("![Dataset Cover](dataset-cover.png)")
+
+images_md = "\n\n".join(image_lines)   # separate images with a blank line
+
+# Complete README content
+readme_content = f"""# Terrorist-Attack-Data-Visualization
+
+{images_md}
 
 This project explores the Global Terrorism Database (GTD) using Python and Jupyter Notebook to analyze and visualize terrorist attacks worldwide.
 
@@ -82,27 +106,3 @@ Install the required Python libraries:
 
 ```bash
 pip install numpy pandas matplotlib seaborn scipy scikit-learn networkx plotly folium jupyter
-```
-""",
-    encoding="utf-8"
-)
-
-images_svg = root / "images" / "terrorism_overview.svg"
-if not images_svg.exists():
-   images_svg = None
-# check dataset cover
-dataset_cover_candidates = [root/"dataset-cover.png", root/"images"/"dataset-cover.png"]
-dataset_cover_path = next((p for p in dataset_cover_candidates if p.exists()), None)
-# build image markdown lines
-image_lines = []
-if images_svg is not None:
-   image_lines.append(f"![Terrorist Attack Data Visualization]({images_svg.relative_to(root).as_posix()})")
-if dataset_cover_path is not None:
-   image_lines.append(f"![Dataset Cover]({dataset_cover_path.relative_to(root).as_posix()})")
-else:
-   image_lines.append("![Dataset Cover](dataset-cover.png)")
-content = f"""# Terrorist-Attack-Data-Visualization
-
-{...}
-"""
-readme_path.write_text(content, encoding="utf-8")
